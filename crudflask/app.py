@@ -27,7 +27,6 @@ def insert():
     gender = data.get("gender")
 
     student = Student.query.filter_by(email=email).first()
-    # print(student)
 
     if not student :
         student = Student(
@@ -42,9 +41,20 @@ def insert():
     else :
         return jsonify({"message" : "Student already exists" , "code" : 403})
 
-@app.route("/delete")
-def delete():
-    return 
+@app.route("/delete" , methods= ["GET","DELETE"])
+def delete():   
+
+    data = request.get_json()
+    email = data.get("email")
+
+    student = Student.query.filter_by(email = email).first()
+
+    if student:
+        Student.query.filter_by(email = email).delete()
+        db.session.commit()
+        return jsonify({"message" : "Deleted Successfully" , "code" : 200})
+    else :
+        return jsonify({"message" : "Student does not exists" , "code" : 404})
 
 @app.route("/edit")
 def edit():
