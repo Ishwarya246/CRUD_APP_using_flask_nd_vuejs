@@ -40,6 +40,8 @@ def insert():
     
     else :
         return jsonify({"message" : "Student already exists" , "code" : 403})
+    
+
 
 @app.route("/delete" , methods= ["GET","DELETE"])
 def delete():   
@@ -55,9 +57,26 @@ def delete():
         return jsonify({"message" : "Deleted Successfully" , "code" : 200})
     else :
         return jsonify({"message" : "Student does not exists" , "code" : 404})
+    
+    
 
-@app.route("/edit")
-def edit():
-    return
+@app.route("/update" , methods = ["PUT"])
+def update():
+
+    data = request.get_json()
+    email = data.get("email")
+    attribute = data.get("attribute")
+    value = data.get("value")
+
+    student = Student.query.filter_by(email = email).first()
+
+    if student :
+
+        setattr(student , attribute , value)
+        db.session.commit()
+        return jsonify({"message" : "Updated Successfully" , "code" : 200 })
+    
+    else :
+        return jsonify({"message" : "Student doesnot exists" , "code" : 404})
 
 app.run()
