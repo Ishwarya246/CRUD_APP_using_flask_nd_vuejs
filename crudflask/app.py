@@ -18,7 +18,6 @@ def home():
 
 @app.route("/insert" , methods=["POST"])
 def insert():
-    print("..........................")
     data = request.get_json()
 
     name = data.get("name")
@@ -43,7 +42,7 @@ def insert():
     
 
 
-@app.route("/delete" , methods= ["GET","DELETE"])
+@app.route("/delete" , methods= ["DELETE"])
 def delete():   
 
     data = request.get_json()
@@ -79,4 +78,4 @@ def update():
     else :
         return jsonify({"message" : "Student doesnot exists" , "code" : 404})
 
-app.run()
+app.run(debug=True)
