@@ -3,13 +3,19 @@
   <div class="f21"> 
     <article class="f22">
       <h1 class="f11">Student List</h1>
+
+      <p>
+        <ul>
+          <li v-for="stud in list" :key="stud">{{ stud.name }} {{ stud.age }} {{ stud.email }} {{ stud.gender }} </li>
+        </ul>
+      </p>
     </article>
 
     <article class="f22">
       <h1 class="f11">Create new entry</h1>
 
 
-      <form>
+      <form @submit.prevent="addDetails">
         <label class="label">Name </label> 
         <input class="input" value=""  type = "text" v-model.trim ="name" placeholder="Your Name" required/>
         <br>
@@ -26,11 +32,10 @@
         <input class="input" type = "text" v-model.trim ="gender"  value="" placeholder="Your Gender" required/>
         <br>
 
-        <div class="f33">
-          <button class="button" type="submit"> Save </button>
-        </div>
+        <!-- <div class="f33"> -->
+          <button class="button" type="submit" > Save </button>
+        <!-- </div> -->
       </form>
-
     </article>
   </div>
 
@@ -41,6 +46,7 @@ export default {
 
   data(){
     return{
+      list : [],
       name : "",
       age : "",
       email : "",
@@ -50,6 +56,13 @@ export default {
   methods : {
     save(){
       return "Hello"
+    },
+    addDetails(){
+      this.list.push ({"name" : this.name , "email" : this.email , "age" : this.age , "gender":this.gender}),
+      this.name = "",
+      this.age = "",
+      this.email = "",
+      this.gender = ""
     }
   }
 }
