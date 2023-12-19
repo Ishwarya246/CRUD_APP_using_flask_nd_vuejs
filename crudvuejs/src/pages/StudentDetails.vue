@@ -7,7 +7,7 @@
       <div class="f44"><div class="f55" style="width:27% ">NAME </div> <div class="f55" style="width:4%" >AGE</div><div class="f55" style="width:40%" >EMAIL</div> <div class="f55" style="width:10%">GENDER</div> <div class="f55" style="width:15%">Options</div>
       </div>
 
-      <div class="f44" v-for="stud in list" :key="stud"><div class="f55" style="width:27%">{{ stud.name }}</div> <div class="f55" style="width:4%" >{{ stud.age }}</div><div class="f55" style="width:40%" >{{ stud.email }}</div> <div class="f55" style="width:10%">{{ stud.gender }}</div> <div class="f55" style="width:15%"><button class="f66"> Edit</button> <button class="f66"> Delete</button></div>
+      <div class="f44" v-for="(stud,i) in list" :key="i"><div class="f55" style="width:27%">{{ stud.name }}</div> <div class="f55" style="width:4%" >{{ stud.age }}</div><div class="f55" style="width:40%" >{{ stud.email }}</div> <div class="f55" style="width:10%">{{ stud.gender }}</div> <div class="f55" style="width:15%"><button class="f66" @click="edit(i)"> Edit</button> <button class="f66" @click="remove(i)"> Delete</button></div>
       </div>
 
     </article>
@@ -38,6 +38,34 @@
         </div>
       </form>
     </article>
+
+
+    <article  v-if="isEdit">
+      <h1 class="f11">Update Student details</h1>
+
+
+      <form @submit.prevent="updateDetails">
+        <label class="label">Name </label> 
+        <input class="input" value=""  type = "text" v-model.trim ="editname" placeholder="Your Name" required/>
+        <br>
+
+        <label class="label" >Age </label>
+        <input class="input" type = "text" v-model.trim ="editage" value="age" placeholder="Your Age" required/>
+        <br>
+
+        <label class="label" >Email </label>
+        <input class="input" type = "email" v-model.trim ="editemail" value="email" placeholder="Your Email" required/>
+        <br>
+
+        <label class="label" >Gender </label>
+        <input class="input" type = "text" v-model.trim ="editgender"  value="gender" placeholder="Your Gender" required/>
+        <br>
+
+        <div class="f33">
+          <button class="button" type="submit" > Update </button>
+        </div>
+      </form>
+    </article>
   </div>
 
 </template>
@@ -51,7 +79,14 @@ export default {
       name : "",
       age : "",
       email : "",
-      gender : ""
+      gender : "",
+      iter : "",
+      isEdit : false,
+      editname : "",
+      editage : "",
+      editemail : "",
+      editgender : "",
+      ind : ""
     }
   },
   methods : {
@@ -64,6 +99,30 @@ export default {
       this.age = "",
       this.email = "",
       this.gender = ""
+    },
+    edit(i){
+      this.ind = i,
+      this.isEdit = true,
+      this.editname = this.list[i].name,
+      this.editage = this.list[i].age,
+      this.editemail = this.list[i].email,
+      this.editgender = this.list[i].gender
+    },
+    remove(index){
+      this.list = this.list.filter((email,i) => i != index)
+    },
+    updateDetails(){
+      this.list[this.ind].name = this.editname,
+      this.list[this.ind].email = this.editemail,
+      this.list[this.ind].age = this.editage,
+      this.list[this.ind].gender = this.editgender,
+
+      this.ind = "",
+      this.isEdit = false,
+      this.editname = "",
+      this.editage = "",
+      this.editemail = "",
+      this.editgender = ""
     }
   }
 }
@@ -76,7 +135,6 @@ export default {
   font-family: cursive;
   font-size: 100%;
   font-weight : bold;
-  /* border-color: black; */
   border-radius: 10px;
   background-color: hsl(34, 40%, 90%);
 }
