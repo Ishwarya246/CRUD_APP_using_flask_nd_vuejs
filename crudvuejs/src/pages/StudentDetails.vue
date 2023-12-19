@@ -1,17 +1,18 @@
 <template>
 
   <div class="f21"> 
-    <article class="f22">
+    <article class="f22" style="width: 60%;">
       <h1 class="f11">Student List</h1>
 
-      <p>
-        <ul>
-          <li v-for="stud in list" :key="stud">{{ stud.name }} {{ stud.age }} {{ stud.email }} {{ stud.gender }} </li>
-        </ul>
-      </p>
+      <div class="f44"><div class="f55" style="width:27% ">NAME </div> <div class="f55" style="width:4%" >AGE</div><div class="f55" style="width:40%" >EMAIL</div> <div class="f55" style="width:10%">GENDER</div> <div class="f55" style="width:15%">Options</div>
+      </div>
+
+      <div class="f44" v-for="stud in list" :key="stud"><div class="f55" style="width:27%">{{ stud.name }}</div> <div class="f55" style="width:4%" >{{ stud.age }}</div><div class="f55" style="width:40%" >{{ stud.email }}</div> <div class="f55" style="width:10%">{{ stud.gender }}</div> <div class="f55" style="width:15%"><button class="f66"> Edit</button> <button class="f66"> Delete</button></div>
+      </div>
+
     </article>
 
-    <article class="f22">
+    <article class="f22" style="width: 30%;">
       <h1 class="f11">Create new entry</h1>
 
 
@@ -32,9 +33,9 @@
         <input class="input" type = "text" v-model.trim ="gender"  value="" placeholder="Your Gender" required/>
         <br>
 
-        <!-- <div class="f33"> -->
+        <div class="f33">
           <button class="button" type="submit" > Save </button>
-        <!-- </div> -->
+        </div>
       </form>
     </article>
   </div>
@@ -69,6 +70,38 @@ export default {
 </script>
 
 <style>
+
+.f66{
+  color: blue;
+  font-family: cursive;
+  font-size: 100%;
+  font-weight : bold;
+  /* border-color: black; */
+  border-radius: 10px;
+  background-color: hsl(34, 40%, 90%);
+}
+
+.f55{
+  background-color: hsl(34, 40%, 90%);
+  width: 20%;
+  color: blue;
+  font-family: cursive;
+  font-size: 100%;
+  padding: 2.5px;
+  border-color: black;
+  margin: 1px;
+  font-weight : bold;
+}
+
+.f44{
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  background-color: hsl(33, 76%, 71%);
+  padding: 5px;
+  margin: 2px;
+  height: 1cm;
+}
 
 .f33{
   display: flex;
