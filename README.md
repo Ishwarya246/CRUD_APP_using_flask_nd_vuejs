@@ -11,9 +11,9 @@ python3 -m venv env
 flask run
 
 # To create tables using sqlalchemy
-flask shell
-from app import db
-db.create_all()
+- flask shell
+- from app import db
+- db.create_all()
 
 # To install vue-router 
 npm install vue-router@4
