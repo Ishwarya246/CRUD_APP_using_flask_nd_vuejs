@@ -17,9 +17,9 @@ db.create_all()
 
 # To install vue-router 
 npm install vue-router@4
-1.update main.js
-2.create router.js
-3.update App.vue
+- 1.update main.js
+- 2.create router.js
+- 3.update App.vue
 
 # To connect flask and vue js
 npm install axios@1.3.6 --save
