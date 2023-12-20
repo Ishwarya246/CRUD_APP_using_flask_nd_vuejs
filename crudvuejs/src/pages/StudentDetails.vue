@@ -4,10 +4,10 @@
     <article class="f22" style="width: 60%;">
       <h1 class="f11">Student List</h1>
 
-      <div class="f44"><div class="f55" style="width:27% ">NAME </div> <div class="f55" style="width:4%" >AGE</div><div class="f55" style="width:40%" >EMAIL</div> <div class="f55" style="width:10%">GENDER</div> <div class="f55" style="width:15%">Options</div>
+      <div class="f44"> <div class="f55" style="width:10%">ROLL NO</div>  <div class="f55" style="width:27% ">NAME </div> <div class="f55" style="width:4%" >AGE</div><div class="f55" style="width:40%" >EMAIL</div> <div class="f55" style="width:15%">OPTIONS</div>
       </div>
 
-      <div class="f44" v-for="(stud,i) in list" :key="i"><div class="f55" style="width:27%">{{ stud.name }}</div> <div class="f55" style="width:4%" >{{ stud.age }}</div><div class="f55" style="width:40%" >{{ stud.email }}</div> <div class="f55" style="width:10%">{{ stud.gender }}</div> <div class="f55" style="width:15%"><button class="f66" @click="edit(i)"> Edit</button> <button class="f66" @click="remove(i)"> Delete</button></div>
+      <div class="f44" v-for="(stud,i) in list" :key="i"><div class="f55" style="width:10%">{{ stud.rollno }}</div> <div class="f55" style="width:27%">{{ stud.name }}</div> <div class="f55" style="width:4%" >{{ stud.age }}</div><div class="f55" style="width:40%" >{{ stud.email }}</div>  <div class="f55" style="width:15%"><button class="f66" @click="edit(i)"> Edit</button> <button class="f66" @click="remove(i)"> Delete</button></div>
       </div>
 
     </article>
@@ -29,8 +29,8 @@
         <input class="input" type = "email" v-model.trim ="email" value="" placeholder="Your Email" required/>
         <br>
 
-        <label class="label" >Gender </label>
-        <input class="input" type = "text" v-model.trim ="gender"  value="" placeholder="Your Gender" required/>
+        <label class="label" >rollno </label>
+        <input class="input" type = "text" v-model.trim ="rollno"  value="" placeholder="Your rollno" required/>
         <br>
 
         <div class="f33">
@@ -40,7 +40,7 @@
     </article>
 
 
-    <article  v-if="isEdit">
+    <article class="f22" v-if="isEdit">
       <h1 class="f11">Update Student details</h1>
 
 
@@ -57,8 +57,8 @@
         <input class="input" type = "email" v-model.trim ="editemail" value="email" placeholder="Your Email" required/>
         <br>
 
-        <label class="label" >Gender </label>
-        <input class="input" type = "text" v-model.trim ="editgender"  value="gender" placeholder="Your Gender" required/>
+        <label class="label" >rollno </label>
+        <input class="input" type = "text" v-model.trim ="editrollno"  value="rollno" placeholder="Your rollno" disabled="true" />
         <br>
 
         <div class="f33">
@@ -66,11 +66,14 @@
         </div>
       </form>
     </article>
-  </div>
 
+  </div>
 </template>
 
 <script>
+
+import axios from 'axios';
+
 export default {
 
   data(){
@@ -79,53 +82,105 @@ export default {
       name : "",
       age : "",
       email : "",
-      gender : "",
+      rollno : "",
       iter : "",
       isEdit : false,
       editname : "",
       editage : "",
       editemail : "",
-      editgender : "",
-      ind : ""
+      editrollno : "",
+      ind : "",
+      res : ""
     }
   },
   methods : {
-    save(){
-      return "Hello"
+
+    getDetails(){
+      const path = 'http://localhost:5000/select';
+      axios.get(path)
+      .then(response => {
+        this.list = response.data
+      })
+      .catch(err => {
+        console.log(err)
+      })
     },
     addDetails(){
-      this.list.push ({"name" : this.name , "email" : this.email , "age" : this.age , "gender":this.gender}),
+      this.getDetails();
+      const path = 'http://localhost:5000/insert';
+      axios.post(path, {
+        name : this.name,
+        email : this.email,
+        age : this.age,
+        rollno : this.rollno
+      })
+      .then(response => {
+        console.log(response);
+      })
+      .catch(err =>{
+        console.log(err);
+      });
+      this.getDetails();
+      
       this.name = "",
       this.age = "",
       this.email = "",
-      this.gender = ""
+      this.rollno = ""
     },
+    
     edit(i){
       this.ind = i,
       this.isEdit = true,
       this.editname = this.list[i].name,
       this.editage = this.list[i].age,
       this.editemail = this.list[i].email,
-      this.editgender = this.list[i].gender
+      this.editrollno = this.list[i].rollno
     },
-    remove(index){
-      this.list = this.list.filter((email,i) => i != index)
-    },
-    updateDetails(){
-      this.list[this.ind].name = this.editname,
-      this.list[this.ind].email = this.editemail,
-      this.list[this.ind].age = this.editage,
-      this.list[this.ind].gender = this.editgender,
 
+    remove(index){
+      this.getDetails();
+      const path = 'http://localhost:5000/delete';
+      axios.put(path , {rollno : this.list[index].rollno})
+      .then (response => {
+        console.log(response)
+      })
+      .catch(err => {
+        console.log(err)
+      } )
+      this.getDetails();
+    },
+
+    updateDetails(){
+      this.getDetails();
+      const path = 'http://localhost:5000/update';
+      axios.put(path , {
+        name : this.editname,
+        email : this.editemail,
+        age : this.editage,
+        rollno : this.editrollno
+      })
+      .then(response => {
+        console.log(response)
+      })
+      .catch(err => {
+        console.log(err)
+      })
+      // this.getDetails();
+      // this.list[this.ind].name = this.editname,
+      // this.list[this.ind].email = this.editemail,
+      // this.list[this.ind].age = this.editage,
+      // this.list[this.ind].rollno = this.editrollno,
+      this.getDetails();
       this.ind = "",
       this.isEdit = false,
       this.editname = "",
       this.editage = "",
       this.editemail = "",
-      this.editgender = ""
+      this.editrollno = ""
     }
   }
 }
+
 </script>
 
 <style>

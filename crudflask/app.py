@@ -2,6 +2,7 @@ from flask import Flask,jsonify,request
 from models.models import db, Student 
 from flask_cors import CORS
 from uuid import uuid4
+from sqlalchemy import asc
 
 app = Flask(__name__)
 CORS(app)
@@ -15,6 +16,14 @@ def home():
     print("Hello")
     return "Welcome To the CRUD Appliation"
 
+@app.route('/select',methods=["GET"])
+def select():
+    record = Student.query.order_by(asc(Student.rollno)).all()
+    response = []
+    for i in record:
+        d = i.as_dict()
+        response.append(d)
+    return jsonify(response)
 
 @app.route("/insert" , methods=["POST"])
 def insert():
@@ -23,16 +32,16 @@ def insert():
     name = data.get("name")
     age = data.get("age")
     email = data.get("email")
-    gender = data.get("gender")
+    rollno = data.get("rollno")
 
-    student = Student.query.filter_by(email=email).first()
+    student = Student.query.filter_by(rollno = rollno).first()
 
     if not student :
         student = Student(
                           name = name,
                           age = age,
                           email = email,
-                          gender = gender)
+                          rollno = rollno)
         db.session.add(student)
         db.session.commit()
         return jsonify({"message" : "Success" , "code" : 200 })
@@ -42,16 +51,15 @@ def insert():
     
 
 
-@app.route("/delete" , methods= ["DELETE"])
+@app.route("/delete" , methods= ["PUT"])
 def delete():   
 
     data = request.get_json()
-    email = data.get("email")
-
-    student = Student.query.filter_by(email = email).first()
+    rollno = data.get("rollno")
+    student = Student.query.filter_by(rollno = rollno).first()
 
     if student:
-        Student.query.filter_by(email = email).delete()
+        Student.query.filter_by(rollno = rollno).delete()
         db.session.commit()
         return jsonify({"message" : "Deleted Successfully" , "code" : 200})
     else :
@@ -63,15 +71,20 @@ def delete():
 def update():
 
     data = request.get_json()
+    name = data.get("name")
+    age = data.get("age")
     email = data.get("email")
-    attribute = data.get("attribute")
-    value = data.get("value")
+    rollno = data.get("rollno")
 
-    student = Student.query.filter_by(email = email).first()
+    student = Student.query.filter_by(rollno = rollno).first()
 
     if student :
 
-        setattr(student , attribute , value)
+        setattr(student , "name" , name)
+        setattr(student , "age" , age)
+        setattr(student , "email" , email)
+        setattr(student , "rollno" , rollno)
+
         db.session.commit()
         return jsonify({"message" : "Updated Successfully" , "code" : 200 })
     

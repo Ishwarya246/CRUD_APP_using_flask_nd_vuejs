@@ -1,7 +1,7 @@
 <template>
   <AppHeader />
   <StudentDetails />
-
+  <router-view></router-view>
 </template>
 
 <script>
